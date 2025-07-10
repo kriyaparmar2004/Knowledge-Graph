@@ -12,7 +12,7 @@ embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
 graph = Neo4jGraph(
     url="neo4j://127.0.0.1:7687",
     username="neo4j",
-    password="RezinixKnowledgeGraph"
+    password="Your password here"  # Change this to your Neo4j password
 )
 
 # Step 1: Hybrid chunking function
