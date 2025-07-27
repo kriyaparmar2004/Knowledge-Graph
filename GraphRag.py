@@ -520,7 +520,7 @@ def demo_personalized_graphrag():
         neo4j_url="neo4j://localhost:7687",
         neo4j_username="neo4j", 
         neo4j_password="RezinixKnowledgeGraph",
-        openai_api_key="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"  # Set your actual key
+        openai_api_key=""  # Set your actual key
     )
     
     # Create users

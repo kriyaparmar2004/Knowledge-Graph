@@ -1,0 +1,5 @@
+langchain
+sentence-transformers
+scikit-learn
+neo4j
+numpy

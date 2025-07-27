@@ -1,118 +1,123 @@
 # 🚀 AI Knowledge Graph with Hybrid Ranking
 
-This project builds a **knowledge graph** in Neo4j from a set of AI-related documents, then lets you **rank and search** the graph by combining:
-- Semantic similarity (using embeddings)
-- Popularity (how often chunks were queried)
-- Recency (how recently chunks were queried)
+This project constructs a **knowledge graph** in Neo4j from a collection of AI-related documents. It enables **intelligent retrieval and ranking** by integrating:
 
-🔎 Ideal for building **smart semantic search systems** that adapt to user behavior.
+- ✅ **Semantic similarity** (via sentence embeddings)
+- 🔁 **Popularity** (query frequency of chunks)
+- 🕒 **Recency** (timestamp decay based on latest queries)
 
----
-
-## 📂 **Project structure**
-
-- `hybrid_kg.py` — main Python script (builds the graph + runs hybrid ranking)
-- `README.md` — project guide
+Ideal for developing **adaptive semantic search systems** that evolve based on user interaction.
 
 ---
 
-## ⚙️ **Setup instructions**
+## 🧠 Features
 
-### ✅ 1. Clone the repo (or copy files)
+- Builds a knowledge graph with `Document` and `Chunk` nodes.
+- Embeds text chunks using the `all-MiniLM-L6-v2` model.
+- Implements hybrid ranking for search queries using:
+  - Cosine similarity
+  - Query count
+  - Last queried timestamp (decay factor)
+- Automatically updates metadata based on search activity.
+
+---
+
+## 📁 Project Structure
 
 ```bash
-git clone https://github.com/Rezinix-AI/Enterprise-Rag-standalone.git
-cd Enterprise-Rag-standalone
-git checkout knowledgeGraphWithRanking
-
-
-✅ 2. Install dependencies
-Create a virtual environment (recommended):
-
+├── hybrid_kg.py         # Main script: graph construction + hybrid query ranking
+├── README.md            # Project documentation
+├── requirements.txt     # List of Python dependencies
+⚙️ Setup Instructions
+1️⃣ Clone the Repository
+2️⃣ Create Virtual Environment (Recommended)
 bash
 Copy
 Edit
 python -m venv venv
-source venv/bin/activate    # On Linux/macOS
-venv\Scripts\activate       # On Windows
-Install required packages:
-
+source venv/bin/activate        # Linux/macOS
+venv\Scripts\activate           # Windows
+3️⃣ Install Dependencies
 bash
 Copy
 Edit
-pip install langchain sentence-transformers scikit-learn neo4j numpy
-✅ 3. Set up Neo4j
-Download and install Neo4j Community Edition:
-👉 https://neo4j.com/download/
+pip install -r requirements.txt
+4️⃣ Set up Neo4j
+Download Neo4j Community Edition: 👉 Neo4j Download Page
 
-Start Neo4j Browser (default at http://localhost:7474)
+Start Neo4j Browser at: http://localhost:7474
 
-Ensure Neo4j is running on neo4j://127.0.0.1:7687
+Default Neo4j connection URL: neo4j://127.0.0.1:7687
 
-Use user: neo4j and set password to:
+Use default user: neo4j
 
-text
+Set or update the password in hybrid_kg.py:
+
+python
 Copy
 Edit
-Your password when you set up te instance
-(Or change the password in hybrid_kg.py if you prefer.)
-
-▶️ How to run
-After setup, simply run:
+NEO4J_USERNAME = "neo4j"
+NEO4J_PASSWORD = "your_password_here"
+▶️ Running the Project
+After setup, run:
 
 bash
 Copy
 Edit
 python hybrid_kg.py
-What it does:
+This will:
 
-Creates Document and Chunk nodes in Neo4j (from 20 AI sample documents)
+Load AI sample documents
 
-Embeds text chunks using all-MiniLM-L6-v2 model
+Split into chunks
 
-Lets you fire a sample query like:
+Embed each chunk
 
-“How does AI help reduce costs?”
+Build graph in Neo4j
 
-Ranks results by a hybrid score:
+Accept a sample query like:
 
-Semantic similarity
+"How does AI reduce cost in businesses?"
 
-Popularity (query_count)
+And return top-ranked answers based on hybrid score:
 
-Recency (last_queried with decay)
+hybrid_score = α * similarity + β * popularity + γ * recency
 
-Updates popularity counters and timestamps automatically
-
-🧠 How to visualize the knowledge graph
-In Neo4j Browser, run:
+🧾 Visualize the Knowledge Graph (Neo4j)
+To see all documents and chunks:
 
 cypher
 Copy
 Edit
 MATCH (d:Document)-[:HAS_CHUNK]->(c:Chunk)
 RETURN d, c
-To see all nodes and relationships:
+To explore all graph relationships:
 
 cypher
 Copy
 Edit
 MATCH (n)-[r]->(m)
 RETURN n, r, m
-✏️ Customize
-Add your own documents in documents = [...] list
+🛠️ Customization
+➕ Add Your Own Documents
+Replace or extend the list:
 
-Change chunk size / overlap in:
-
+python
+Copy
+Edit
+documents = [
+    "AI is transforming healthcare...",
+    ...
+]
+🧩 Adjust Chunking Parameters
 python
 Copy
 Edit
 RecursiveCharacterTextSplitter(chunk_size=200, chunk_overlap=50)
-Tune ranking weights:
-
+🔧 Tune Ranking Weights
 python
 Copy
 Edit
-alpha=0.6  # similarity
-beta=0.3   # popularity
-gamma=0.1  # recency
+alpha = 0.6   # Semantic similarity
+beta = 0.3    # Popularity (query_count)
+gamma = 0.1   # Recency (last_queried)
